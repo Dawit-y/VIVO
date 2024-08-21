@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
 import axios from "../../../api/axios";
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { userSelecter } from "../../../store/features/auth/authSlice";
 
 function DashboardCard07() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -11,9 +13,7 @@ function DashboardCard07() {
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
-  const {
-    user: { organization_id },
-  } = useAuth();
+  const { organization_id } = useSelector(userSelecter);
   const [applications, setApplications] = useState([]);
 
   const fetchApplications = async (organization_id) => {
@@ -144,7 +144,10 @@ function DashboardCard07() {
                         </thead>
                         {filteredData.map((application) => {
                           return (
-                            <tbody className="divide-y divide-gray-100">
+                            <tbody
+                              key={application.id}
+                              className="divide-y divide-gray-100"
+                            >
                               <tr
                                 id={application.id}
                                 key={application.id}

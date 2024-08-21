@@ -1,7 +1,29 @@
+import useAuth from "../../hooks/useAuth";
+import { useEffect, useState } from "react";
+import api from "../../api/axios";
+
 export default ({ currentStep, setCurrentStep }) => {
   const handleStepClick = (step) => {
     setCurrentStep(step);
   };
+
+  const [applicant, setApplicant] = useState(null);
+  const { user } = useAuth();
+
+  useEffect(() => {
+    const fetchApplicant = async () => {
+      try {
+        const response = await api.get(`applicants/${user.applicant_id}/`);
+        setApplicant(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (user) {
+      fetchApplicant();
+    }
+  }, [user]);
 
   return (
     <>
@@ -11,7 +33,7 @@ export default ({ currentStep, setCurrentStep }) => {
           <h3 class="text-3xl sm:text-4xl leading-normal font-extrabold tracking-tight text-gray-900 dark:text-slate-300">
             Good Job{" "}
             <span class="text-indigo-600 dark:text-indigo-700">
-              Abiy, Keep It Up!
+              {applicant && applicant.first_name}, Keep It Up!
             </span>
           </h3>
         </div>

@@ -42,34 +42,7 @@ export const AuthProvider = ({ children }) => {
     }
   }
 
-  async function registerUser(user, image) {
-    console.log(user, image);
-    try {
-      const formData = new FormData();
-      for (let i = 0; i < Object.keys(user).length; i++) {
-        formData.append(`${Object.keys(user)[i]}`, Object.values(user)[i]);
-      }
-      formData.append("image", image);
-      const formDataObject = Object.fromEntries(formData);
-
-      const url = "auth/users/";
-
-      const response = await axios.post(url, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      if (response.status === 201) {
-        const data = {
-          email: user.email,
-          password: user.password,
-        };
-        login(data);
-      }
-    } catch {
-      console.log("catched");
-    }
-  }
+ 
   async function updateToken() {
     try {
       const response = await axios.post(
@@ -128,7 +101,7 @@ export const AuthProvider = ({ children }) => {
   }, [authToken]);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, registerUser }}>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {loading ? <LoadingIndicator /> : children}
     </AuthContext.Provider>
   );

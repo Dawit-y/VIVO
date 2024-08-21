@@ -1,12 +1,16 @@
 import { useEffect, useRef, useState } from "react";
-import useAuth from "../hooks/useAuth";
 import axios from "../api/axios";
+import { userSelecter } from "../store/features/auth/authSlice";
+import { useSelector, useDispatch } from "react-redux";
+import { clearAuthToken } from "../store/features/auth/authSlice";
+import { Link, useNavigate } from "react-router-dom";
 
 // Avtar with darpdown menu
 export default () => {
   const [state, setState] = useState(false);
   const profileRef = useRef();
-  const { logout, user } = useAuth();
+  const user = useSelector(userSelecter);
+  console.log(user);
 
   const getDashboardPath = (role) => {
     const paths = {
@@ -62,7 +66,13 @@ export default () => {
         });
     }
   }, [user]);
-  console.log(userAvatar);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    dispatch(clearAuthToken());
+    navigate("/", { replace: true });
+  };
 
   return (
     <div className="relative border-t lg:border-none">
@@ -99,17 +109,17 @@ export default () => {
       >
         {navigation.map((item, idx) => (
           <li key={idx}>
-            <a
+            <Link
               className="block text-gray-600 dark:text-slate-300 hover:text-gray-900 lg:hover:bg-gray-50 lg:p-3"
-              href={item.path}
+              to={item.path}
             >
               {item.title}
-            </a>
+            </Link>
           </li>
         ))}
 
         <button
-          onClick={logout}
+          onClick={handleLogout}
           className="block w-full text-justify text-gray-600 dark:text-slate-300 hover:text-gray-900 border-t py-3 lg:hover:bg-gray-50 lg:p-3"
         >
           Logout

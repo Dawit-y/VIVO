@@ -1,14 +1,13 @@
 import React from "react";
 import Image01 from "../../../images/user-36-05.jpg";
 import { NavLink } from "react-router-dom";
-import useAuth from "../../../hooks/useAuth";
 import { useState, useEffect } from "react";
 import axios from "../../../api/axios";
+import { useSelector } from "react-redux";
+import { userSelecter } from "../../../store/features/auth/authSlice";
 
 function DashboardCard10() {
-  const {
-    user: { organization_id },
-  } = useAuth();
+  const {organization_id} = useSelector(userSelecter);
   const [applications, setApplications] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 

@@ -4,11 +4,11 @@ import { NavLink } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
 import axios from "../../../api/axios";
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { userSelecter } from "../../../store/features/auth/authSlice";
 
 function DashboardCard11() {
-  const {
-    user: { organization_id },
-  } = useAuth();
+  const {organization_id} = useSelector(userSelecter);
   const [submittedTasks, setSubmittedTasks] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 

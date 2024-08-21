@@ -1,9 +1,10 @@
 import Image01 from "../../images/user-36-05.jpg";
 import load_bar from "../../images/load-bar.png";
 import { Link } from "react-router-dom";
-import useAuth from "../../hooks/useAuth";
 import axios from "../../api/axios";
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { userSelecter } from "../../store/features/auth/authSlice";
 
 const tasksByCategory = [
   {
@@ -47,9 +48,7 @@ const tasksByCategory = [
 ];
 
 function MainTaskPage() {
-  const {
-    user: { applicant_id },
-  } = useAuth();
+  const { applicant_id } = useSelector(userSelecter);
 
   const [applications, setApplications] = useState([]);
   const fetchApplications = async (applicant_id) => {
@@ -106,7 +105,7 @@ function MainTaskPage() {
           class="group [&_summary::-webkit-details-marker]:hidden mb-2"
         >
           <summary class="flex cursor-pointer items-center justify-between gap-1.5 rounded-lg bg-gray-50 dark:bg-slate-800 p-4 text-gray-900">
-            <h2 class="font-bold dark:text-slate-300">teurtwe</h2>
+            <h2 class="font-bold dark:text-slate-300">Machine Learning</h2>
 
             <svg
               class="w-5 h-5 shrink-0 transition duration-300 group-open:-rotate-180 dark:text-slate-300"

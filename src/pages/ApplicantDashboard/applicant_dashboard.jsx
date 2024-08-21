@@ -6,10 +6,7 @@ import Steps_component from "../../components/ApplicantComponents/steps_componen
 
 const ApplicantDashboard = () => {
   const [currentStep, setCurrentStep] = useState("Progress");
-  console.log(currentStep);
-  // const handleStepChange = (step) => {
-  //   setCurrentStep(step);
-  // };
+
   return (
     <>
       <Steps_component

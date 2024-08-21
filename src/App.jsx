@@ -1,100 +1,201 @@
-import React, { useEffect } from "react";
-import { Routes, Route, useLocation, Navigate } from "react-router-dom";
-
+import React, { useEffect, lazy, Suspense } from "react";
+import { Routes, Route, useLocation, Navigate, Outlet } from "react-router-dom";
 import "./css/style.css";
-
 import "./charts/ChartjsConfig";
 
-// Import pages
-import Dashboard from "./pages/AdminDashboard/Dashboard";
-import SyscooDashboard from "./pages/SystemCoordinatorDashboard/SyscooDashboard";
-import OrganizationDashboard from "./pages/OrganizationDashboard/OrganizationDashboard";
-import Organization from "./pages/OrganizationDashboard/Organization";
-import LandingPage from "./pages/landingpage";
-import ApplicantDashboard from "./pages/ApplicantDashboard/applicant_dashboard";
-import SignIn from "./pages/AuthPages/SignIn";
-import Applicant_profile_component from "./components/ApplicantComponents/applicant_profile_component";
-import Applicants_list from "./pages/AdminDashboard/Sidebar_elements/applicants_list";
-import Organizations_list from "./pages/AdminDashboard/Sidebar_elements/organizations_list";
-import Internship_opportunity_card from "./pages/AdminDashboard/Sidebar_elements/internship_opportunity_card";
-import Internship_post_card from "./pages/SystemCoordinatorDashboard/Sidebar_elements/Internship_post_card";
-import InternshipPostCard from "./pages/OrganizationDashboard/Sidebar_elements/Internship_post_card";
-import Syscoordinator_post_detail from "./components/SystemCoordinatorComponents/Syscoordinator_post_detail";
-import System_coordinator_add_post from "./components/SystemCoordinatorComponents/System_coordinator_add_post";
-import System_coordinator_addTask from "./components/SystemCoordinatorComponents/System_coordinator_addTask";
-import Syscoordinator_Application_detail from "./components/SystemCoordinatorComponents/Syscoordinator_Application_detail";
-import Certifiy_Applicants from "./components/SystemCoordinatorComponents/Certifiy_Applicants";
-import Posted_opportunity_details from "./pages/Posts/posted_opportunity_details";
-import Home from "./pages/Home";
-import Settings_component from "./components/ApplicantComponents/settings_component";
-import Task from "./components/ApplicantComponents/task";
-import Admin_home from "./pages/AdminDashboard/admin_home";
-import Opportunity_details_component from "./components/AdminComponents/opportunity_details_component";
-import Organization_Post_details_component from "./components/OrganizationComponents/Organization_Post_details_component";
+// Import layout components
 import ProLayout from "./pages/AdminDashboard/pro_layout";
-import Apply_form from "./components/apply_form";
+import RequireAuth from "./components/RequireAuth";
+
+// Import common pages
+import Home from "./pages/Home";
+import LandingPage from "./pages/landingpage";
 import ErrorPage from "./pages/error_page";
+import SignIn from "./pages/AuthPages/SignIn";
 import WelcomePage from "./pages/AuthPages/Welcome";
 import SignupCompany from "./pages/AuthPages/Signup_company";
-import Modal from "./components/modal";
+import SignupStudent from "./pages/AuthPages/Signup_student";
+import SignupUVcoordinator from "./pages/AuthPages/Signup_UVcoordinator";
+import ApplicantSignup from "./pages/AuthPages/ApplicantSignup";
+import Unauthorized from "./components/Unauhtorized";
 import WaitApproval from "./components/wait_approval";
+
+// Import common components
+import Modal from "./components/modal";
 import LoadingIndicator from "./components/loading_indicator";
 import SuccessfulAlert from "./components/successful_alert";
 import ErrorAlert from "./components/Error_alert";
 import SuccessPage from "./components/success_page";
 import Confetti from "./components/confetti";
-import SignupStudent from "./pages/AuthPages/Signup_student";
+
+// Import dashboards
+import Dashboard from "./pages/AdminDashboard/Dashboard";
+import SyscooDashboard from "./pages/SystemCoordinatorDashboard/SyscooDashboard";
+import OrganizationDashboard from "./pages/OrganizationDashboard/OrganizationDashboard";
+import ApplicantDashboard from "./pages/ApplicantDashboard/applicant_dashboard";
+import UvCoordDashboard from "./pages/UvCoordinatorDashboard/UvCoordDashboard";
+import Supervisor from "./pages/SupervisorDashboard/Supervisor";
+
+// Import Admin components
+import Admin_home from "./pages/AdminDashboard/admin_home";
+import Applicants_list from "./pages/AdminDashboard/Sidebar_elements/applicants_list";
+import Organizations_list from "./pages/AdminDashboard/Sidebar_elements/organizations_list";
+import Internship_opportunity_card from "./pages/AdminDashboard/Sidebar_elements/internship_opportunity_card";
+import Uvcoordinator_list from "./pages/AdminDashboard/Sidebar_elements/uvcoordinator_list";
+import Uvsupervisor_list from "./pages/AdminDashboard/uvsupervisor_list";
+import ApplicantDetail from "./components/AdminComponents/ApplicantDetail";
+import OrganizationDetail from "./components/AdminComponents/OrganizationDetail";
+import UvCoordinatorDetail from "./components/AdminComponents/UvCoordinator_detail";
+import UvSupervisorDetail from "./components/AdminComponents/UvSupervisor_detail";
+import Opportunity_details_component from "./components/AdminComponents/opportunity_details_component";
+
+// Import System Coordinator components
 import SystemCoordinator from "./pages/SystemCoordinatorDashboard/SystemCoordinator";
-import Organization_Applications from "./pages/OrganizationDashboard/Sidebar_elements/Organization_Applications";
-import Organization_Applicants from "./pages/OrganizationDashboard/Sidebar_elements/Organization_Applicants";
-import Organization_Submitted_tasks from "./pages/OrganizationDashboard/Sidebar_elements/Organization_Submitted_tasks";
-import Syscoordinator_Applications from "./pages/SystemCoordinatorDashboard/Sidebar_elements/Syscoordinator_Applications";
-import Syscoordinator_Applicants from "./pages/SystemCoordinatorDashboard/Sidebar_elements/Syscoordinator_Applicants";
-import Evaluated_applicants from "./pages/SystemCoordinatorDashboard/Sidebar_elements/Evaluated_applicants";
-import RequireAuth from "./components/RequireAuth";
-import ApplicantSignup from "./pages/AuthPages/ApplicantSignup";
-import Unauthorized from "./components/Unauhtorized";
-import Organization_Add_post from "./components/OrganizationComponents/Organization_Add_post";
-import SubmittedTaskDetails from "./components/OrganizationComponents/Organization_Submitted_Tasks_Detail";
-import Progress_page from "./components/OrganizationComponents/Progress_page";
+const Internship_post_card = React.lazy(() =>
+  import(
+    "./pages/SystemCoordinatorDashboard/Sidebar_elements/Internship_post_card"
+  )
+);
+const Syscoordinator_post_detail = React.lazy(() =>
+  import("./components/SystemCoordinatorComponents/Syscoordinator_post_detail")
+);
+const Volunteer_post_card = React.lazy(() =>
+  import(
+    "./pages/SystemCoordinatorDashboard/Sidebar_elements/Volunteer_post_card"
+  )
+);
+const Syscoordinator_volunteer_post_detail = React.lazy(() =>
+  import(
+    "./components/SystemCoordinatorComponents/Syscoordinator_volunteer_post_detail"
+  )
+);
+const Syscoordinator_Applications = React.lazy(() =>
+  import(
+    "./pages/SystemCoordinatorDashboard/Sidebar_elements/Syscoordinator_Applications"
+  )
+);
+const Syscoordinator_Application_detail = React.lazy(() =>
+  import(
+    "./components/SystemCoordinatorComponents/Syscoordinator_Application_detail"
+  )
+);
+const Syscoordinator_Applicants = React.lazy(() =>
+  import(
+    "./pages/SystemCoordinatorDashboard/Sidebar_elements/Syscoordinator_Applicants"
+  )
+);
+const Applicant_progress = React.lazy(() =>
+  import("./components/SystemCoordinatorComponents/Applicant_progress")
+);
+const System_coordinator_add_post = React.lazy(() =>
+  import("./components/SystemCoordinatorComponents/System_coordinator_add_post")
+);
+const System_coordinator_addTask = React.lazy(() =>
+  import("./components/SystemCoordinatorComponents/System_coordinator_addTask")
+);
+const SystemCoordinator_Submitted_tasks = React.lazy(() =>
+  import(
+    "./pages/SystemCoordinatorDashboard/Sidebar_elements/SystemCoordinator_Submitted_tasks"
+  )
+);
+const Sys_coordinator_submitted_Task_Details = React.lazy(() =>
+  import(
+    "./components/SystemCoordinatorComponents/Sys_coordinator_submitted_Task_Details"
+  )
+);
+const Evaluated_applicants = React.lazy(() =>
+  import(
+    "./pages/SystemCoordinatorDashboard/Sidebar_elements/Evaluated_applicants"
+  )
+);
+const Certifiy_Applicants = React.lazy(() =>
+  import("./components/SystemCoordinatorComponents/Certifiy_Applicants")
+);
+
+// Import Organization components
+import Organization from "./pages/OrganizationDashboard/Organization";
+const InternshipPostCard = lazy(() =>
+  import("./pages/OrganizationDashboard/Sidebar_elements/Internship_post_card")
+);
+const Organization_Post_details_component = lazy(() =>
+  import(
+    "./components/OrganizationComponents/Organization_Post_details_component"
+  )
+);
+const Organization_volunteer_detail = lazy(() =>
+  import("./components/OrganizationComponents/organization_volunteer_detail")
+);
+const Organization_Add_post = lazy(() =>
+  import("./components/OrganizationComponents/Organization_Add_post")
+);
+const AddTask = lazy(() =>
+  import("./components/OrganizationComponents/AddTask")
+);
+const Organization_Applications = lazy(() =>
+  import(
+    "./pages/OrganizationDashboard/Sidebar_elements/Organization_Applications"
+  )
+);
+const ApplicationDetails = lazy(() =>
+  import("./components/OrganizationComponents/Application_Details")
+);
+const Organization_Applicants = lazy(() =>
+  import(
+    "./pages/OrganizationDashboard/Sidebar_elements/Organization_Applicants"
+  )
+);
+const Progress_page = lazy(() =>
+  import("./components/OrganizationComponents/Progress_page")
+);
+const Organization_Submitted_tasks = lazy(() =>
+  import(
+    "./pages/OrganizationDashboard/Sidebar_elements/Organization_Submitted_tasks"
+  )
+);
+const SubmittedTaskDetails = lazy(() =>
+  import(
+    "./components/OrganizationComponents/Organization_Submitted_Tasks_Detail"
+  )
+);
+
+// Import Applicant components
+import Applicant_profile_component from "./components/ApplicantComponents/applicant_profile_component";
+import Settings_component from "./components/ApplicantComponents/settings_component";
+import Task from "./components/ApplicantComponents/task";
 import ApplyComponent from "./components/apply_component";
-import ApplicationDetails from "./components/OrganizationComponents/Application_Details";
-import AddTask from "./components/OrganizationComponents/AddTask";
 import TaskSection1 from "./components/TaskSectionComponents/task_section_1";
 import TaskSection2 from "./components/TaskSectionComponents/task_section_2";
 import TaskSection3 from "./components/TaskSectionComponents/task_section_3";
 import TaskSection4 from "./components/TaskSectionComponents/task_section_4";
 import TaskSection5 from "./components/TaskSectionComponents/task_section_5";
 
-import UvCoordDashboard from "./pages/UvCoordinatorDashboard/UvCoordDashboard";
+// Import UV Coordinator components
 import ViewStudents from "./pages/UvCoordinatorDashboard/Sidebar_elements/ViewStudents";
 import AddSupervisor from "./pages/UvCoordinatorDashboard/Sidebar_elements/AddSupervisor";
 import ViewSuperVisors from "./pages/UvCoordinatorDashboard/Sidebar_elements/ViewSuperVisors";
-import Supervisor from "./pages/SupervisorDashboard/Supervisor";
 import SuperVisorDetail from "./pages/UvCoordinatorDashboard/Sidebar_elements/SuperVisorDetail";
 import AssignSupervisor from "./pages/UvCoordinatorDashboard/Sidebar_elements/AssignSupervisor";
 import EditAssignamet from "./pages/UvCoordinatorDashboard/Sidebar_elements/EditAssignament";
 import StudentDetail from "./pages/UvCoordinatorDashboard/Sidebar_elements/StudentDetail";
-import ListOfStudents from "./pages/SupervisorDashboard/Sidebar_elements/ListOfStudents";
 
+// Import UV Supervisor components
+import ListOfStudents from "./pages/SupervisorDashboard/Sidebar_elements/ListOfStudents";
 import StudentDetails from "./pages/SupervisorDashboard/Sidebar_elements/StudentDetails";
 import StudentList from "./pages/SupervisorDashboard/Sidebar_elements/StudentList";
 import StudentEvaluation from "./pages/SupervisorDashboard/Sidebar_elements/StudentEvaluation";
-import Volunteer_post_card from "./pages/OrganizationDashboard/Sidebar_elements/volunteer_post_card";
-import Syscoordinator_volunteer_post_detail from "./components/SystemCoordinatorComponents/Syscoordinator_volunteer_post_detail";
-import Applicant_progress from "./components/SystemCoordinatorComponents/Applicant_progress";
+
+// Import Landing Page components
 import Internships from "./components/LandingPageComponents/internships";
 import Volunteers from "./components/LandingPageComponents/volunteer";
-import SignupUVcoordinator from "./pages/AuthPages/Signup_UVcoordinator";
-import Organization_volunteer_detail from "./components/OrganizationComponents/organization_volunteer_detail";
-import SystemCoordinator_Submitted_tasks from "./pages/SystemCoordinatorDashboard/Sidebar_elements/SystemCoordinator_Submitted_tasks";
-import Sys_coordinator_submitted_Task_Details from "./components/SystemCoordinatorComponents/Sys_coordinator_submitted_Task_Details";
-import ApplicantDetail from "./components/AdminComponents/ApplicantDetail";
-import OrganizationDetail from "./components/AdminComponents/OrganizationDetail";
-import Uvcoordinator_list from "./pages/AdminDashboard/Sidebar_elements/uvcoordinator_list";
-import UvCoordinatorDetail from "./components/AdminComponents/UvCoordinator_detail";
-import Uvsupervisor_list from "./pages/AdminDashboard/uvsupervisor_list";
-import UvSupervisorDetail from "./components/AdminComponents/UvSupervisor_detail";
+
+// Import Posts
+import Posted_opportunity_details from "./pages/Posts/posted_opportunity_details";
+
+const SuspenseLayout = () => (
+  <React.Suspense fallback={<LoadingIndicator />}>
+    <Outlet />
+  </React.Suspense>
+);
 
 function App() {
   const location = useLocation();
@@ -251,41 +352,46 @@ function App() {
               element={<OrganizationDashboard />}
             >
               <Route index element={<Organization />} />
-              <Route path="internship_posts" element={<ProLayout />}>
-                <Route index element={<InternshipPostCard />} />
-                <Route
-                  path="internship_posts_details"
-                  element={<Organization_Post_details_component />}
-                />
-              </Route>
-              <Route path="volunteer_posts" element={<ProLayout />}>
-                <Route index element={<Volunteer_post_card />} />
-                <Route
-                  path="internship_posts_details"
-                  element={<Organization_volunteer_detail />}
-                />
-              </Route>
-              <Route path="add_post" element={<ProLayout />}>
-                <Route index element={<Organization_Add_post />} />
-                <Route path="add_task" element={<AddTask />} />
-              </Route>
-              <Route path="Applications" element={<ProLayout />}>
-                <Route index element={<Organization_Applications />} />
-                <Route
-                  path="Application_Details"
-                  element={<ApplicationDetails />}
-                />
-              </Route>
-              <Route path="Applicants" element={<ProLayout />}>
-                <Route index element={<Organization_Applicants />} />
-                <Route path="Applicant_progress" element={<Progress_page />} />
-              </Route>
-              <Route path="Submitted_Tasks" element={<ProLayout />}>
-                <Route index element={<Organization_Submitted_tasks />} />
-                <Route
-                  path="Submitted_Tasks_Detail"
-                  element={<Sys_coordinator_submitted_Task_Details />}
-                />
+              <Route element={<SuspenseLayout />}>
+                <Route path="internship_posts" element={<ProLayout />}>
+                  <Route index element={<InternshipPostCard />} />
+                  <Route
+                    path="internship_posts_details"
+                    element={<Organization_Post_details_component />}
+                  />
+                </Route>
+                <Route path="volunteer_posts" element={<ProLayout />}>
+                  <Route index element={<Volunteer_post_card />} />
+                  <Route
+                    path="internship_posts_details"
+                    element={<Organization_volunteer_detail />}
+                  />
+                </Route>
+                <Route path="add_post" element={<ProLayout />}>
+                  <Route index element={<Organization_Add_post />} />
+                  <Route path="add_task" element={<AddTask />} />
+                </Route>
+                <Route path="Applications" element={<ProLayout />}>
+                  <Route index element={<Organization_Applications />} />
+                  <Route
+                    path="Application_Details"
+                    element={<ApplicationDetails />}
+                  />
+                </Route>
+                <Route path="Applicants" element={<ProLayout />}>
+                  <Route index element={<Organization_Applicants />} />
+                  <Route
+                    path="Applicant_progress"
+                    element={<Progress_page />}
+                  />
+                </Route>
+                <Route path="Submitted_Tasks" element={<ProLayout />}>
+                  <Route index element={<Organization_Submitted_tasks />} />
+                  <Route
+                    path="Submitted_Tasks_Detail"
+                    element={<Sys_coordinator_submitted_Task_Details />}
+                  />
+                </Route>
               </Route>
             </Route>
           </Route>

@@ -1,8 +1,9 @@
 import { useLocation, Navigate, Outlet } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
+import { userSelecter } from "../store/features/auth/authSlice";
+import { useSelector } from "react-redux";
 
 const RequireAuth = ({ allowedRoles }) => {
-  const { user } = useAuth();
+  const user = useSelector(userSelecter);
   const location = useLocation();
 
   if (!user) {
