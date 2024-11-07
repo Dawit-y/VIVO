@@ -5,6 +5,20 @@ import { useSelector, useDispatch } from "react-redux";
 import { clearAuthToken } from "../store/features/auth/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 
+export const getDashboardPath = (role) => {
+  const paths = {
+    organization: "/organization",
+    admin: "/admin_dashboard",
+    applicant: "/applicant_dashboard",
+    student: "/applicant_dashboard",
+    system_coordinator: "/System_Coordinator",
+    university_coordinator: "/UvCoordinator",
+    university_supervisor: "/Supervisor",
+  };
+  return paths[role] || "/";
+};
+
+
 // Avtar with darpdown menu
 export default () => {
   const [state, setState] = useState(false);
@@ -12,18 +26,6 @@ export default () => {
   const user = useSelector(userSelecter);
   console.log(user);
 
-  const getDashboardPath = (role) => {
-    const paths = {
-      organization: "/organization",
-      admin: "/admin_dashboard",
-      applicant: "/applicant_dashboard",
-      student: "/applicant_dashboard",
-      system_coordinator: "/System_Coordinator",
-      university_coordinator: "/UvCoordinator",
-      university_supervisor: "/Supervisor",
-    };
-    return paths[role] || "/";
-  };
 
   const navigation = [
     { title: "Profile", path: "profile" },

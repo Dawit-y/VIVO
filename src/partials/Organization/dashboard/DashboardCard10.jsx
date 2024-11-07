@@ -1,64 +1,37 @@
 import React from "react";
-import Image01 from "../../../images/user-36-05.jpg";
 import { NavLink } from "react-router-dom";
-import { useState, useEffect } from "react";
-import axios from "../../../api/axios";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { userSelecter } from "../../../store/features/auth/authSlice";
+import { useFetchApplicationsQuery } from "../../../store/features/organization/apiSlice";
 
 function DashboardCard10() {
-  const {organization_id} = useSelector(userSelecter);
-  const [applications, setApplications] = useState([]);
+  const { organization_id } = useSelector(userSelecter);
   const [searchTerm, setSearchTerm] = useState("");
-
-  const fetchApplications = async (organization_id) => {
-    try {
-      const res = await axios.get(
-        `organizations/${organization_id}/applications`
-      );
-      const filteredApplications = res.data.map((application) => ({
-        id: application.id.toString(),
-        applicant_id: application.applicant.id,
-        image: Image01,
-        name: `${application.applicant.first_name} ${application.applicant.last_name}`,
-        email: application.applicant.email,
-        phone_number: application.applicant.phone_number,
-        gender: application.applicant.gender,
-        post_id: application.post.id,
-        post: application.post.title,
-        status: application.status,
-        skills: application.skills,
-        cover_letter: application.cover_letter,
-        availability: application.availability,
-        other: application.other,
-        application_date: new Date(application.created).toLocaleDateString(),
-      }));
-      setApplications(filteredApplications);
-    } catch (error) {
-      console.error("Error fetching applications:", error);
-    }
-  };
-
-  useEffect(() => {
-    if (organization_id) {
-      fetchApplications(organization_id);
-    }
-  }, [organization_id]);
+  const {
+    data: applications = [],
+    isLoading,
+    error,
+  } = useFetchApplicationsQuery(organization_id);
 
   // Filtered data based on search term
   const filteredData = applications.filter(
     (data) =>
-      data.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      data.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      data.application_date.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      data.applicant.first_name
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      data.applicant.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      data.created.toLowerCase().includes(searchTerm.toLowerCase()) ||
       data.status.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      data.post.toLowerCase().includes(searchTerm.toLowerCase())
+      data.post.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Function to handle search input change
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error fetching applications</div>;
 
   return (
     <div className="col-span-full xl:col-span-full bg-white dark:bg-slate-800 shadow-lg  border-slate-200  border rounded-lg divide-y divide-gray-200 dark:border-gray-700 dark:divide-gray-700">
@@ -146,29 +119,29 @@ function DashboardCard10() {
                           <div className="w-10 h-10 shrink-0 mr-2 sm:mr-3">
                             <img
                               className="rounded-full"
-                              src={application.image}
+                              src={application.applicant.avatar}
                               width="40"
                               height="40"
-                              alt={application.name}
+                              alt={"avatar"}
                             />
                           </div>
                           <div className="font-medium text-slate-800 dark:text-slate-100">
-                            {application.name}
+                            {application.applicant.first_name}
                           </div>
                         </div>
                       </NavLink>
                     </td>
                     <td className="p-2 whitespace-nowrap">
-                      <div className="text-left">{application.post}</div>
+                      <div className="text-left">{application.post.title}</div>
                     </td>
                     <td className="p-2 whitespace-nowrap">
                       <div className="text-left font-medium text-green-500">
-                        {application.application_date}
+                        {application.created}
                       </div>
                     </td>
                     <td className="p-2 whitespace-nowrap">
                       <div className="text-md text-center">
-                        {application.email}
+                        {application.applicant.email}
                       </div>
                     </td>
                     <td className="p-2 whitespace-nowrap">

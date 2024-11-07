@@ -1,63 +1,32 @@
-import Image01 from "../../../images/user-36-05.jpg";
-import load_bar from "../../../images/load-bar.png";
 import { Link } from "react-router-dom";
-import useAuth from "../../../hooks/useAuth";
-import axios from "../../../api/axios";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { userSelecter } from "../../../store/features/auth/authSlice";
+import { useFetchAcceptedApplicantsQuery } from "../../../store/features/organization/apiSlice";
 
 function DashboardCard07() {
   const [searchTerm, setSearchTerm] = useState("");
-  // Function to handle search input change
+  const { organization_id } = useSelector(userSelecter);
+  const {
+    data: applicants = [],
+    isLoading,
+    error,
+  } = useFetchAcceptedApplicantsQuery(organization_id);
+  console.log(applicants);
+
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
-  const { organization_id } = useSelector(userSelecter);
-  const [applications, setApplications] = useState([]);
 
-  const fetchApplications = async (organization_id) => {
-    try {
-      const res = await axios.get(
-        `organizations/${organization_id}/applications`
-      );
-      const filteredApplications = res.data
-        .filter((application) => application.status === "accepted")
-        .map((application) => ({
-          id: application.id.toString(),
-          applicant_id: application.applicant.id,
-          image: Image01,
-          name: `${application.applicant.first_name} ${application.applicant.last_name}`,
-          email: application.applicant.email,
-          phone_number: application.applicant.phone_number,
-          gender: application.applicant.gender,
-          post_id: application.post.id,
-          post: application.post.title,
-          spent: new Date(application.created).toLocaleDateString(),
-          status: load_bar,
-          progress: "25%",
-        }));
-      setApplications(filteredApplications);
-    } catch (error) {
-      console.error("Error fetching applications:", error);
-    }
-  };
-
-  // Filtered data based on search term
-  const filteredData = applications.filter(
+  const filteredData = applicants?.filter(
     (data) =>
       data.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       data.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       data.spent.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      data.progress.toLowerCase().includes(searchTerm.toLowerCase()) ||
       data.post.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  useEffect(() => {
-    if (organization_id) {
-      fetchApplications(organization_id);
-    }
-  }, [organization_id]);
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error fetching applications</div>;
 
   return (
     <>

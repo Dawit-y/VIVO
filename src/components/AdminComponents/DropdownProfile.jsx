@@ -3,12 +3,16 @@ import { Link } from "react-router-dom";
 import Transition from "../../utils/Transition";
 
 import UserAvatar from "../../images/user-36-04.jpg";
-import useAuth from "../../hooks/useAuth";
+import { useDispatch } from "react-redux";
+import { clearAuthToken } from "../../store/features/auth/authSlice";
 
 function DropdownProfile({ align }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const { logout } = useAuth();
+  const dispatch = useDispatch();
+  const logout = () => {
+    dispatch(clearAuthToken());
+  };
 
   const trigger = useRef(null);
   const dropdown = useRef(null);

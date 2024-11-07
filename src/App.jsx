@@ -1,11 +1,14 @@
 import React, { useEffect, lazy, Suspense } from "react";
 import { Routes, Route, useLocation, Navigate, Outlet } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setLoading, setAuthToken } from "./store/features/auth/authSlice";
 import "./css/style.css";
 import "./charts/ChartjsConfig";
 
 // Import layout components
 import ProLayout from "./pages/AdminDashboard/pro_layout";
 import RequireAuth from "./components/RequireAuth";
+import PersistLogin from "./components/PersistLogin";
 
 // Import common pages
 import Home from "./pages/Home";
@@ -206,6 +209,17 @@ function App() {
     document.querySelector("html").style.scrollBehavior = "";
   }, [location.pathname]); // triggered on route change
 
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const storedTokens = localStorage.getItem("tokens");
+    if (storedTokens) {
+      const parsedTokens = JSON.parse(storedTokens);
+      dispatch(setAuthToken(parsedTokens));
+    }
+    dispatch(setLoading(false));
+  }, [dispatch]);
+
   return (
     <>
       <Routes>
@@ -344,53 +358,54 @@ function App() {
               </Route>
             </Route>
           </Route>
-
-          <Route element={<RequireAuth allowedRoles={["organization"]} />}>
-            <Route
-              exact
-              path="/organization"
-              element={<OrganizationDashboard />}
-            >
-              <Route index element={<Organization />} />
-              <Route element={<SuspenseLayout />}>
-                <Route path="internship_posts" element={<ProLayout />}>
-                  <Route index element={<InternshipPostCard />} />
-                  <Route
-                    path="internship_posts_details"
-                    element={<Organization_Post_details_component />}
-                  />
-                </Route>
-                <Route path="volunteer_posts" element={<ProLayout />}>
-                  <Route index element={<Volunteer_post_card />} />
-                  <Route
-                    path="internship_posts_details"
-                    element={<Organization_volunteer_detail />}
-                  />
-                </Route>
-                <Route path="add_post" element={<ProLayout />}>
-                  <Route index element={<Organization_Add_post />} />
-                  <Route path="add_task" element={<AddTask />} />
-                </Route>
-                <Route path="Applications" element={<ProLayout />}>
-                  <Route index element={<Organization_Applications />} />
-                  <Route
-                    path="Application_Details"
-                    element={<ApplicationDetails />}
-                  />
-                </Route>
-                <Route path="Applicants" element={<ProLayout />}>
-                  <Route index element={<Organization_Applicants />} />
-                  <Route
-                    path="Applicant_progress"
-                    element={<Progress_page />}
-                  />
-                </Route>
-                <Route path="Submitted_Tasks" element={<ProLayout />}>
-                  <Route index element={<Organization_Submitted_tasks />} />
-                  <Route
-                    path="Submitted_Tasks_Detail"
-                    element={<Sys_coordinator_submitted_Task_Details />}
-                  />
+          <Route element={<PersistLogin />}>
+            <Route element={<RequireAuth allowedRoles={["organization"]} />}>
+              <Route
+                exact
+                path="/organization"
+                element={<OrganizationDashboard />}
+              >
+                <Route index element={<Organization />} />
+                <Route element={<SuspenseLayout />}>
+                  <Route path="internship_posts" element={<ProLayout />}>
+                    <Route index element={<InternshipPostCard />} />
+                    <Route
+                      path="internship_posts_details"
+                      element={<Organization_Post_details_component />}
+                    />
+                  </Route>
+                  <Route path="volunteer_posts" element={<ProLayout />}>
+                    <Route index element={<Volunteer_post_card />} />
+                    <Route
+                      path="internship_posts_details"
+                      element={<Organization_volunteer_detail />}
+                    />
+                  </Route>
+                  <Route path="add_post" element={<ProLayout />}>
+                    <Route index element={<Organization_Add_post />} />
+                    <Route path="add_task" element={<AddTask />} />
+                  </Route>
+                  <Route path="Applications" element={<ProLayout />}>
+                    <Route index element={<Organization_Applications />} />
+                    <Route
+                      path="Application_Details"
+                      element={<ApplicationDetails />}
+                    />
+                  </Route>
+                  <Route path="Applicants" element={<ProLayout />}>
+                    <Route index element={<Organization_Applicants />} />
+                    <Route
+                      path="Applicant_progress"
+                      element={<Progress_page />}
+                    />
+                  </Route>
+                  <Route path="Submitted_Tasks" element={<ProLayout />}>
+                    <Route index element={<Organization_Submitted_tasks />} />
+                    <Route
+                      path="Submitted_Tasks_Detail"
+                      element={<Sys_coordinator_submitted_Task_Details />}
+                    />
+                  </Route>
                 </Route>
               </Route>
             </Route>

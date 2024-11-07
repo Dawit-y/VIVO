@@ -1,34 +1,19 @@
 import React from "react";
 
 import { NavLink } from "react-router-dom";
-import useAuth from "../../../hooks/useAuth";
-import axios from "../../../api/axios";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { userSelecter } from "../../../store/features/auth/authSlice";
+import { useFetchSubmittedTasksQuery } from "../../../store/features/organization/apiSlice";
 
 function DashboardCard11() {
-  const {organization_id} = useSelector(userSelecter);
-  const [submittedTasks, setSubmittedTasks] = useState([]);
+  const { organization_id } = useSelector(userSelecter);
   const [searchTerm, setSearchTerm] = useState("");
-
-  const fetchSubmittedTasks = async (organization_id) => {
-    try {
-      const res = await axios.get(
-        `organizations/${organization_id}/submitted_tasks/`
-      );
-      setSubmittedTasks(res.data);
-    } catch (error) {
-      console.error("Error fetching applications:", error);
-    }
-  };
-
-  console.log(submittedTasks);
-  useEffect(() => {
-    if (organization_id) {
-      fetchSubmittedTasks(organization_id);
-    }
-  }, [organization_id]);
+  const {
+    data: submittedTasks = [],
+    isLoading,
+    error,
+  } = useFetchSubmittedTasksQuery(organization_id);
 
   // Filtered data based on search term
   const filteredData = submittedTasks.filter(
@@ -43,6 +28,8 @@ function DashboardCard11() {
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error fetching applications</div>;
 
   return (
     <div className="col-span-full xl:col-span-full bg-white dark:bg-slate-800 shadow-lg rounded-sm border border-slate-200 dark:border-slate-700">

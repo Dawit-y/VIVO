@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../api/axios";
-import useAuth from "../../hooks/useAuth";
+import { useSelector } from "react-redux";
+import { userSelecter } from "../../store/features/auth/authSlice";
 
 const AddPost = () => {
-  const {
-    user: { organization_id },
-  } = useAuth();
+  const { organization_id } = useSelector(userSelecter);
   const [postDetails, setPostDetails] = useState({
     title: "",
     duration: "",

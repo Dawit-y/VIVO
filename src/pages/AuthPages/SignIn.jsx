@@ -1,53 +1,47 @@
 import Logo from "../../assets/logo.png";
 import { Link } from "react-router-dom";
-import { useState } from "react";
-import useAuth from "../../hooks/useAuth";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Button, Checkbox, Form, Input } from "antd";
-import { useDispatch, useSelector } from "react-redux";
+import { useForm } from "react-hook-form";
+import { useSelector, useDispatch } from "react-redux";
 import { useLoginMutation } from "../../store/features/auth/authApi";
+import { getDashboardPath } from "../../components/avatar_menu";
+import { setAuthToken } from "../../store/features/auth/authSlice";
 
 export default () => {
-  const [login, { isLoading, isError, isSuccess }] = useLoginMutation();
-  const [data, setData] = useState({});
+  const [login, { isLoading, isError, isSuccess, error }] = useLoginMutation();
 
   const location = useLocation();
   const { state } = location;
   const from = state?.from || { pathname: "/" };
 
+  const user = useSelector((state) => state.auth.user);
+
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleChange = (e) => {
-    setData({ ...data, [e.target.name]: e.target.value });
-  };
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+  const onSubmit = async (data) => {
+    console.log(data);
     try {
       const response = await login(data).unwrap();
-      if (response) {
-        navigate(from.pathname);
-      }
+      dispatch(setAuthToken(response)); // Manually update Redux store with authToken and user data
+      navigate(from.pathname);
     } catch (error) {
-      console.error("Login failed:", error);
+      console.log(error);
     }
   };
 
-  // const [loading, setLoading] = useState(false);
-
-  // const onFinish = (values) => {
-  //   console.log("Success:", values);
-  //   setLoading(true);
-  //   // Simulate a login request
-  //   setTimeout(() => {
-  //     setLoading(false);
-  //     // Handle successful login here
-  //   }, 2000); // Simulate a 2 second delay
-  // };
-
-  // const onFinishFailed = (errorInfo) => {
-  //   console.log("Failed:", errorInfo);
-  // };
+  useEffect(() => {
+    if (user) {
+      navigate(getDashboardPath(user.role), { replace: true });
+    }
+  }, [user, navigate]);
 
   return (
     <main className="w-full flex">
@@ -200,88 +194,34 @@ export default () => {
               Or continue with
             </p>
           </div>
-
-          <Form
-            name="basic"
-            labelCol={{
-              span: 8,
-            }}
-            wrapperCol={{
-              span: 16,
-            }}
-            style={{
-              maxWidth: 600,
-            }}
-            initialValues={{
-              remember: true,
-            }}
-            autoComplete="off"
-          >
-            <Form.Item
-              label="Email"
-              name="email"
-              rules={[
-                {
-                  type: "email",
-                  message: "The input is not valid E-mail!",
-                },
-                {
-                  required: true,
-                  message: "Please input your E-mail!",
-                },
-              ]}
-            >
-              <Input
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            <div>
+              <label className="font-medium">Email</label>
+              <input
+                type="email"
                 name="email"
-                onChange={handleChange}
-                style={{ borderRadius: "8px" }}
+                {...register("email")}
+                required
+                className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
               />
-            </Form.Item>
-
-            <Form.Item
-              label="Password"
-              name="password"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your password!",
-                },
-                {
-                  min: 6,
-                  message: "Password must be at least 6 characters long!",
-                },
-              ]}
+            </div>
+            <div>
+              <label className="font-medium">Password</label>
+              <input
+                type="password"
+                name="password"
+                required
+                className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
+                {...register("password")}
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full px-4 py-2 text-white font-medium bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-600 rounded-lg duration-150"
             >
-              <Input.Password name="password" onChange={handleChange} />
-            </Form.Item>
-
-            <Form.Item
-              name="remember"
-              valuePropName="checked"
-              wrapperCol={{
-                offset: 8,
-                span: 16,
-              }}
-            >
-              <Checkbox>Remember me</Checkbox>
-            </Form.Item>
-
-            <Form.Item
-              wrapperCol={{
-                offset: 8,
-                span: 16,
-              }}
-            >
-              <Button
-                type="primary"
-                htmlType="submit"
-                onClick={handleLogin}
-                loading={isLoading}
-              >
-                Login
-              </Button>
-            </Form.Item>
-          </Form>
+              {isLoading ? "Signing in....." : "Sign In"}
+            </button>
+          </form>
         </div>
       </div>
     </main>

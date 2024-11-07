@@ -1,51 +1,22 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { setAuthToken, clearAuthToken } from './authSlice';
+import { apiSlice } from "../api/apiSlice";
 
-export const authApi = createApi({
-  reducerPath: 'authApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: 'http://127.0.0.1:8000/',
-    prepareHeaders: (headers, { getState }) => {
-      const token = getState().auth.authToken?.access;
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
+// Inject endpoints for login and refresh token
+export const authApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (credentials) => ({
-        url: 'auth/jwt/create/',
-        method: 'POST',
+        url: "auth/jwt/create/",
+        method: "POST",
         body: credentials,
       }),
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          dispatch(setAuthToken(data));
-        } catch (error) {
-          console.error('Login failed:', error);
-        }
-      },
     }),
     refreshToken: builder.mutation({
       query: (refreshToken) => ({
-        url: 'auth/jwt/refresh/',
-        method: 'POST',
+        url: "auth/jwt/refresh/",
+        method: "POST",
         body: { refresh: refreshToken },
       }),
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          dispatch(setAuthToken(data));
-        } catch (error) {
-          console.error('Token refresh failed:', error);
-          dispatch(clearAuthToken());
-        }
-      },
     }),
-    
   }),
 });
 
