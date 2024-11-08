@@ -9,36 +9,16 @@ const Unauthorized = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <h1 style={styles.header}>403 - Unauthorized</h1>
-      <p style={styles.message}>
+    <div className="text-center p-14">
+      <h1 className="text-3xl mt-5">403 - Unauthorized</h1>
+      <p className="text-xl mt-5">
         You do not have permission to access this page.
       </p>
-      <button onClick={goBack} style={styles.button}>
+      <button onClick={goBack} className="px-5 py-3 text-lg cursor-pointer">
         Go Back
       </button>
     </div>
   );
-};
-
-const styles = {
-  container: {
-    textAlign: "center",
-    padding: "50px",
-  },
-  header: {
-    fontSize: "48px",
-    margin: "20px 0",
-  },
-  message: {
-    fontSize: "24px",
-    margin: "20px 0",
-  },
-  button: {
-    padding: "10px 20px",
-    fontSize: "18px",
-    cursor: "pointer",
-  },
 };
 
 export default Unauthorized;

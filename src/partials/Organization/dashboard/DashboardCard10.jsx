@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { userSelecter } from "../../../store/features/auth/authSlice";
-import { useFetchApplicationsQuery } from "../../../store/features/organization/apiSlice";
+import { useFetchApplicationsQuery } from "../../../store/features/organization/organizationApi";
 
 function DashboardCard10() {
   const { organization_id } = useSelector(userSelecter);

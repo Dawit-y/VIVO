@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
 import axios from "../../../api/axios";
+import { useSelector } from "react-redux";
+import { userSelecter } from "../../../store/features/auth/authSlice";
 
 const myStyle = {
   display: "-webkit-box",
@@ -17,9 +19,7 @@ const Volunteer_post_card = () => {
     setSearchTerm(event.target.value);
   };
 
-  const {
-    user: { system_coordinator_id },
-  } = useAuth();
+  const { system_coordinator_id } = useSelector(userSelecter);
   const [posts, setPosts] = useState([]);
 
   const fetchPosts = async (system_coordinator_id) => {

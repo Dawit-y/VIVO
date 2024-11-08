@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import useAuth from "../../../hooks/useAuth";
 import axios from "../../../api/axios";
+import { useSelector } from "react-redux";
+import { userSelecter } from "../../../store/features/auth/authSlice";
 
 const myStyle = {
   display: "-webkit-box",
@@ -11,15 +13,13 @@ const myStyle = {
 
 export default () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const { organization_id } = useSelector(userSelecter);
 
   // Function to handle search input change
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  const {
-    user: { organization_id },
-  } = useAuth();
   const [posts, setPosts] = useState([]);
 
   const fetchPosts = async (organization_id) => {

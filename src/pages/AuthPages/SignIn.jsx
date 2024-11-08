@@ -7,6 +7,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { useLoginMutation } from "../../store/features/auth/authApi";
 import { getDashboardPath } from "../../components/avatar_menu";
 import { setAuthToken } from "../../store/features/auth/authSlice";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 export default () => {
   const [login, { isLoading, isError, isSuccess, error }] = useLoginMutation();
@@ -20,17 +22,26 @@ export default () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const loginSchema = z.object({
+    email: z
+      .string()
+      .min(1, { message: "Email is required" })
+      .email("Invalid email address"),
+    password: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters" }),
+  });
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm();
+  } = useForm({ resolver: zodResolver(loginSchema) });
   const onSubmit = async (data) => {
     console.log(data);
     try {
       const response = await login(data).unwrap();
-      dispatch(setAuthToken(response)); // Manually update Redux store with authToken and user data
+      dispatch(setAuthToken(response));
       navigate(from.pathname);
     } catch (error) {
       console.log(error);
@@ -204,6 +215,11 @@ export default () => {
                 required
                 className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
               />
+              {errors.email && (
+                <span className="text-red-500 text-sm text-bold mt-2">
+                  {errors.email?.message}
+                </span>
+              )}
             </div>
             <div>
               <label className="font-medium">Password</label>
@@ -214,6 +230,11 @@ export default () => {
                 className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
                 {...register("password")}
               />
+              {errors.password && (
+                <span className="text-red-500 text-sm text-bold mt-2">
+                  {errors.password?.message}
+                </span>
+              )}
             </div>
             <button
               type="submit"

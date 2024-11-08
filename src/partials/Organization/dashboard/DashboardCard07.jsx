@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { userSelecter } from "../../../store/features/auth/authSlice";
-import { useFetchAcceptedApplicantsQuery } from "../../../store/features/organization/apiSlice";
+import { useFetchAcceptedApplicantsQuery } from "../../../store/features/organization/organizationApi";
 
 function DashboardCard07() {
   const [searchTerm, setSearchTerm] = useState("");
