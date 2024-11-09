@@ -149,10 +149,10 @@ export default () => {
     },
     {
       title: "Internship",
-      path: "/internships",
+      path: "internships",
       isDrapdown: false,
     },
-    { title: "Volunteer", path: "/volunteers", isDrapdown: false },
+    { title: "Volunteer", path: "volunteers", isDrapdown: false },
     {
       title: "For Universities",
       path: "/Signup_UVCoordinator",
@@ -265,12 +265,12 @@ export default () => {
                         )}
                       </button>
                     ) : (
-                      <a
-                        href={item.path}
+                      <Link
+                        to={item.path}
                         className="block text-gray-700 hover:text-indigo-600"
                       >
                         {item.title}
-                      </a>
+                      </Link>
                     )}
                     {item.isDrapdown &&
                     drapdownState.idx == idx &&

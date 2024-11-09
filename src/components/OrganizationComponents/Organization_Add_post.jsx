@@ -78,17 +78,17 @@ const AddPost = () => {
   };
 
   return (
-    <section className="text-gray-600 body-font overflow-scroll">
+    <section className="text-gray-900 body-font overflow-scroll">
       <div className="px-4 py-6 mx-auto max-w-9xl sm:px-6 md:px-12 lg:px-12 lg:py-12">
-        <h1 className="text-slate-500 text-center text-2xl mb-5 font-extrabold sm:text-3xl">
+        <h1 className="text-gray-900 text-center text-8xl mb-5 font-extrabold sm:text-3xl">
           Make a Post
         </h1>
 
         <form onSubmit={handleSubmit}>
-          <div className="justify-center mx-auto text-left align-bottom transition-all transform bg-white rounded-lg sm:align-middle w-full">
+          <div className="justify-center mx-auto text-left align-bottom transition-all transform bg-white rounded-lg sm:align-middle mb-2 w-full">
             <label
               htmlFor="title"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-gray-900"
             >
               Title
             </label>
@@ -97,14 +97,14 @@ const AddPost = () => {
               name="title"
               value={postDetails.title}
               onChange={handleChange}
-              className="border-slate-300 peer block min-h-[auto] w-full rounded"
+              className="border-slate-300 peer block min-h-[auto] w-full rounded mb-2"
               id="title"
               placeholder="Enter Post Title"
               aria-label="Post Title"
             />
             <label
               htmlFor="duration"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-gray-900"
             >
               Duration
             </label>
@@ -222,7 +222,7 @@ const AddPost = () => {
 
                 <div>
                   <strong className="font-medium text-gray-900">Skills</strong>
-                  <p className="mt-1 text-sm text-gray-700">
+                  <p className="mt-1 text-sm text-gray-900">
                     Specify whether you want to inquire about the
                     applicant&apos;s skills.
                   </p>
@@ -249,7 +249,7 @@ const AddPost = () => {
                     Availability
                   </strong>
                   . . .
-                  <p className="mt-1 text-sm text-gray-700">
+                  <p className="mt-1 text-sm text-gray-900">
                     Specify whether you want to inquire about the
                     applicant&apos;s availability for the position.
                   </p>
@@ -275,7 +275,7 @@ const AddPost = () => {
                   <strong className="text-pretty font-medium text-gray-900">
                     Cover Letter
                   </strong>
-                  <p className="mt-1 text-sm text-gray-700">
+                  <p className="mt-1 text-sm text-gray-900">
                     Specify whether you want to inquire about the
                     applicant&apos;s motivation for choosing your company.
                   </p>
@@ -287,7 +287,7 @@ const AddPost = () => {
               <div>
                 <label
                   htmlFor="skills"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-900"
                 >
                   Skills Gained
                 </label>
@@ -307,7 +307,7 @@ const AddPost = () => {
               <div>
                 <label
                   htmlFor="OrderNotes"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-sm font-medium text-gray-900"
                 >
                   Descriptions
                 </label>
