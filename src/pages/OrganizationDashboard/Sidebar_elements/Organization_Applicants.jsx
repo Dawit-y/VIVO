@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 import { userSelecter } from "../../../store/features/auth/authSlice";
 import { useFetchAcceptedApplicantsQuery } from "../../../store/features/organization/organizationApi";
 import TableContainer from "../../../components/TableContainer";
+import LoadingIndicator from "../../../components/loading_indicator";
+import ErrorMessage from "../../../components/ErrorMessage";
 
 export default () => {
   const { organization_id } = useSelector(userSelecter);
@@ -68,14 +70,17 @@ export default () => {
     []
   );
   console.log("applicants", data);
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error fetching applications</div>;
+  if (isLoading) return <LoadingIndicator />;
+  if (error) return <ErrorMessage message={"Error: fetching Applicants"} />;
 
   return (
     <>
-      <div className="px-10 mt-3">
+      <div className="px-5 mt-3">
         <div className="dark:bg-slate-900 bg-white flex items-center">
-          <div className="container mx-auto">
+          <div className="mx-auto">
+            <h1 className="dark:text-slate-100 mb-8 text-2xl font-bold text-center leading-none tracking-tighter text-neutral-600 md:text-3xl lg:text-4xl">
+              Accepted Applicants
+            </h1>
             {data && (
               <TableContainer
                 columns={columns}

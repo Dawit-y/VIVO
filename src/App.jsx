@@ -125,6 +125,12 @@ const Organization_Post_details_component = lazy(() =>
     "./components/OrganizationComponents/Organization_Post_details_component"
   )
 );
+const OrganizationVolunteerWorks = lazy(() =>
+  import(
+    "./pages/OrganizationDashboard/Sidebar_elements/OrganizationVolunteerWorks"
+  )
+);
+
 const Organization_volunteer_detail = lazy(() =>
   import("./components/OrganizationComponents/organization_volunteer_detail")
 );
@@ -375,7 +381,7 @@ function App() {
                     />
                   </Route>
                   <Route path="volunteer_posts" element={<ProLayout />}>
-                    <Route index element={<Volunteer_post_card />} />
+                    <Route index element={<OrganizationVolunteerWorks />} />
                     <Route
                       path="internship_posts_details"
                       element={<Organization_volunteer_detail />}

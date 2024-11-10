@@ -131,7 +131,7 @@ const TableContainer = ({
   const rowsToFill = 7 - getRowModel().rows.length;
 
   return (
-    <div className="shadow-lg bg-white text-gray-950 border border-gray-200 p-8 rounded">
+    <div className="shadow-lg bg-white text-gray-950 border border-gray-200 p-8 rounded mb-4">
       <div className="mb-4 flex items-center justify-start gap-2">
         {isCustomPageSize && (
           <select
@@ -170,7 +170,7 @@ const TableContainer = ({
 
       <div className={divClassName ? divClassName : "overflow-x-auto"}>
         <table
-          className={`min-w-full ${tableClass} border ${
+          className={`min-w-full table-auto text-left whitespace-nowrap ${tableClass} border ${
             isBordered && "border-gray-300"
           }`}
         >

@@ -1,8 +1,8 @@
 import { createEntityAdapter } from "@reduxjs/toolkit";
 import { apiSlice } from "../api/apiSlice";
 
-const organizationsAdaptor = createEntityAdapter()
-const initialState = organizationsAdaptor.getInitialState()
+const organizationsAdaptor = createEntityAdapter();
+const initialState = organizationsAdaptor.getInitialState();
 
 export const organizationApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -19,7 +19,7 @@ export const organizationApi = apiSlice.injectEndpoints({
           .map((application) => ({
             id: application.id.toString(),
             applicant_id: application.applicant.id,
-            image: application.applicant.avatar, 
+            image: application.applicant.avatar,
             name: `${application.applicant.first_name} ${application.applicant.last_name}`,
             email: application.applicant.email,
             phone_number: application.applicant.phone_number,
@@ -35,6 +35,14 @@ export const organizationApi = apiSlice.injectEndpoints({
       query: (organization_id) =>
         `organizations/${organization_id}/submitted_tasks/`,
     }),
+    fetchOrganizationInternships: builder.query({
+      query: (organization_id) =>
+        `organizations/${organization_id}/posts/?type=Internship`,
+    }),
+    fetchOrganizationVwork: builder.query({
+      query: (organization_id) =>
+        `organizations/${organization_id}/posts/?type=VolunteerWork`,
+    }),
   }),
 });
 
@@ -42,4 +50,6 @@ export const {
   useFetchApplicationsQuery,
   useFetchAcceptedApplicantsQuery,
   useFetchSubmittedTasksQuery,
+  useFetchOrganizationInternshipsQuery,
+  useFetchOrganizationVworkQuery,
 } = organizationApi;

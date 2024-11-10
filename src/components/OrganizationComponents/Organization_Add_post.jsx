@@ -80,8 +80,8 @@ const AddPost = () => {
   return (
     <section className="text-gray-900 body-font overflow-scroll">
       <div className="px-4 py-6 mx-auto max-w-9xl sm:px-6 md:px-12 lg:px-12 lg:py-12">
-        <h1 className="text-gray-900 text-center text-8xl mb-5 font-extrabold sm:text-3xl">
-          Make a Post
+        <h1 className="dark:text-slate-100 mb-8 text-2xl font-bold text-center leading-none tracking-tighter text-neutral-600 md:text-3xl lg:text-4xl">
+          Create a Post
         </h1>
 
         <form onSubmit={handleSubmit}>

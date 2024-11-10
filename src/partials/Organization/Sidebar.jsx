@@ -224,7 +224,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
   return (
     <>
-      <div>
+      <div className="fixed z-40 left-0 top-0 h-full w-1/5">
         {/* Sidebar backdrop for mobile */}
         <div
           className={`fixed inset-0 bg-slate-900 bg-opacity-30 z-40 lg:hidden transition-opacity duration-200 ${
@@ -236,9 +236,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
         {/* Sidebar */}
         <nav
           ref={sidebar}
-          className={`fixed z-40 left-0 top-0 h-screen min-w-64 shadow-lg bg-white dark:bg-slate-800 transition-transform duration-200 ease-in-out ${
-            sidebarOpen ? "translate-x-0" : "-translate-x-64"
-          } lg:translate-x-0 lg:static lg:w-20 lg:sidebar-expanded:!w-64`}
+          className={`fixed z-40 left-0 top-0 h-scree shadow-lg bg-white dark:bg-slate-800 transition-transform duration-200 ease-in-out`}
         >
           {/* Close button for mobile */}
           <button
@@ -308,7 +306,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
                   </Menu>
                 </li>
               </ul>
-              <div className="pt-2 mt-2 border-t fixed bottom-0 w-3/4">
+              <div className="pt-2 mt-2 border-t fixed bottom-0">
                 <ul className="text-sm font-medium">
                   <li>
                     <Link
@@ -363,23 +361,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             </div>
           </div>
         </nav>
-        <div className="pt-3 hidden lg:inline-flex 2xl:hidden justify-end mt-auto">
-          <div className="px-3 py-2">
-            <button onClick={() => setSidebarExpanded(!sidebarExpanded)}>
-              <span className="sr-only">Expand / collapse sidebar</span>
-              <svg
-                className="w-6 h-6 fill-current sidebar-expanded:rotate-180"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  className="text-slate-400"
-                  d="M19.586 11l-5-5L16 4.586 23.414 12 16 19.414 14.586 18l5-5H7v-2z"
-                />
-                <path className="text-slate-600" d="M3 23H1V1h2z" />
-              </svg>
-            </button>
-          </div>
-        </div>
       </div>
     </>
   );
