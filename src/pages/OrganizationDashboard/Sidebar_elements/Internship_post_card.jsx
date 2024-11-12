@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { userSelecter } from "../../../store/features/auth/authSlice";
-import { useFetchOrganizationVworkQuery } from "../../../store/features/organization/organizationApi";
+import { useFetchOrganizationInternshipsQuery } from "../../../store/features/organization/organizationApi";
 import TableContainer from "../../../components/TableContainer";
 import LoadingIndicator from "../../../components/loading_indicator";
 import ErrorMessage from "../../../components/ErrorMessage";
@@ -11,7 +11,7 @@ import ErrorMessage from "../../../components/ErrorMessage";
 export default () => {
   const { organization_id } = useSelector(userSelecter);
   const { data, isLoading, error } =
-    useFetchOrganizationVworkQuery(organization_id);
+    useFetchOrganizationInternshipsQuery(organization_id);
 
   const columns = useMemo(
     () => [

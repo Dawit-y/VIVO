@@ -13,12 +13,12 @@ function OrganizationDashboard(props) {
   };
 
   return (
-    <div className="flex gap-2 w-screen h-screen overflow-x-hidden">
+    <div className="flex gap-2 overflow-x-hidden">
       {/* Sidebar */}
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
       {/* Content area */}
-      <div className="w-4/5 flex flex-col flex-1 overflow-x-hidden">
+      <div className="flex flex-col flex-1 overflow-x-hidden">
         <div className="flex justify-end mt-5 mr-5">
           <button
             type="button"

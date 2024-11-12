@@ -224,10 +224,10 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
   return (
     <>
-      <div className="fixed z-40 left-0 top-0 h-full w-1/5">
+      <div className="sticky top-0 left-0 bottom-0">
         {/* Sidebar backdrop for mobile */}
         <div
-          className={`fixed inset-0 bg-slate-900 bg-opacity-30 z-40 lg:hidden transition-opacity duration-200 ${
+          className={`inset-0 bg-slate-900 bg-opacity-30 z-40 lg:hidden transition-opacity duration-200 ${
             sidebarOpen ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
           aria-hidden="true"
@@ -236,7 +236,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
         {/* Sidebar */}
         <nav
           ref={sidebar}
-          className={`fixed z-40 left-0 top-0 h-scree shadow-lg bg-white dark:bg-slate-800 transition-transform duration-200 ease-in-out`}
+          className={`shadow-lg bg-white dark:bg-slate-800 transition-transform duration-200 ease-in-out`}
         >
           {/* Close button for mobile */}
           <button
