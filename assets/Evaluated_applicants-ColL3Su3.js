@@ -1,1 +1,0 @@
-import{j as a,h as s}from"./index-QQyyaePt.js";const d=()=>a.jsx("main",{className:"px-10 py-10",children:a.jsx("div",{className:"grid grid-cols-12 gap-6",children:a.jsx(s,{})})});export{d as default};
